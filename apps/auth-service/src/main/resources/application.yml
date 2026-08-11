@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:authdb}
+    username: ${DB_USER:auth}
+    password: ${DB_PASSWORD:auth}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${SERVER_PORT:8081}
+
+jwt:
+  private-key-path: ${JWT_PRIVATE_KEY_PATH:keys/private.pem}
+  public-key-path: ${JWT_PUBLIC_KEY_PATH:keys/public.pem}
+  issuer: auth-service
+  expiration-minutes: ${JWT_EXPIRATION_MINUTES:60}
+
+app:
+  cors:
+    allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  structured:
+    format:
+      console: ecs
